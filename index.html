@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalSecrets - Presentation Prototype</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="switchPage('home')">LocalSecrets <span>BETA</span></div>
+        <nav>
+            <button class="nav-btn active" id="nav-home" onclick="switchPage('home')">Home</button>
+            <button class="nav-btn" id="nav-map" onclick="switchPage('map')">Explore Map</button>
+            <button class="nav-btn btn-upload" onclick="switchPage('upload')">+ Share Secret</button>
+        </nav>
+    </header>
+
+    <div id="home" class="page active">
+        <div class="hero">
+            <h1>Unlock the Soul of the City.</h1>
+            <p>Google Maps shows you roads. Locals show you secrets. Trade your skills to discover hidden food, music, and places off the grid.</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="openMysteryTutorial()" style="background: rgba(0, 255, 204, 0.1); border: 1px solid #00ffcc; color: #00ffcc; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#00ffcc'; this.style.color='black'" onmouseout="this.style.background='rgba(0, 255, 204, 0.1)'; this.style.color='#00ffcc'">
+                🛡️ See How Mystery Zones Protect Locals
+            </button>
+        </div>
+        
+        <div style="margin-top: 50px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 15px 30px; border-radius: 50px; display: flex; align-items: center; gap: 15px; animation: slideUp 1s ease-out forwards; animation-delay: 0.5s; opacity: 0;">
+            <span style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #00ffcc; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
+                <span class="pulse-dot" style="width: 8px; height: 8px; background: #00ffcc; border-radius: 50%; display: inline-block;"></span> Live
+            </span>
+            <marquee scrollamount="4" style="color: #b3b3b3; font-size: 14px; width: 400px;">
+                Rahul just traded "Guitar Tuning" for a hidden Momo stall • Priya unlocked "Makaibari Viewpoint" by teaching Python • Amit shared a new folk music location...
+            </marquee>
+        </div>
+        
+        <div class="categories">
+            <div class="card" onclick="openMap('food')">
+                <div class="card-icon">🍜</div>
+                <h3>Food</h3>
+                <p style="color:#aaa; font-size:13px; margin-top:8px; line-height: 1.4;">Street food & hidden kitchens</p>
+            </div>
+            <div class="card" onclick="openMap('places')">
+                <div class="card-icon">📍</div>
+                <h3>Places</h3>
+                <p style="color:#aaa; font-size:13px; margin-top:8px; line-height: 1.4;">Views & trails off the map</p>
+            </div>
+            <div class="card" onclick="openMap('music')">
+                <div class="card-icon">🎵</div>
+                <h3>Music</h3>
+                <p style="color:#aaa; font-size:13px; margin-top:8px; line-height: 1.4;">Folk art & local jams</p>
+            </div>
+            <div class="card" onclick="openMap('traditions')">
+                <div class="card-icon">🎭</div>
+                <h3>Traditions</h3>
+                <p style="color:#aaa; font-size:13px; margin-top:8px; line-height: 1.4;">Rituals & daily life</p>
+            </div>
+        </div>
+
+        <div class="mission-container">
+            <h2 class="mission-title">Why We Built LocalSecrets</h2>
+            <p class="mission-subtitle">We believe travel should benefit the people who actually live there.</p>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="mission-icon">🛑</div>
+                    <h4>The Problem</h4>
+                    <p>When exact GPS coordinates of hidden gems are posted online, over-tourism destroys the local environment and culture.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">🤝</div>
+                    <h4>Our Solution</h4>
+                    <p>We hide the exact pins. To unlock them, travelers must offer a real-world skill or trade to the local community.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">🌱</div>
+                    <h4>Our Future Plan</h4>
+                    <p>To build a global, sustainable network where tourism is based on mutual respect, connection, and fair exchange.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="home-footer">
+            <p>&copy; 2026 LocalSecrets Network. All rights reserved.</p>
+            <div class="footer-links">
+                <span onclick="showToast('Privacy Policy coming soon!', 'info')">Privacy Policy</span>
+                <span onclick="showToast('Terms of Service coming soon!', 'info')">Terms of Service</span>
+                <span onclick="showToast('Community Guidelines loaded.', 'info')">Community Guidelines</span>
+            </div>
+            <p style="font-size: 11px; margin-top: 5px; color: #666;">Made with ❤️ in Jalpaiguri</p>
+        </div>
+    </div>
+
+    <div id="map" class="page" style="display: none; flex-direction: column; position: relative;">
+        <div class="filter-bar">
+            <div style="position: relative; flex: 1; max-width: 300px; margin-right: 15px;">
+                <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666;">🔍</span>
+                <input type="text" id="map-search" placeholder="Search secrets (e.g. Momo)..." 
+                    oninput="handleSearch(this.value)" 
+                    style="width: 100%; padding: 10px 10px 10px 35px; border-radius: 20px; border: 1px solid #444; background: #111; color: white; font-family: 'Outfit', sans-serif; font-size: 13px; outline: none; transition: 0.3s;"
+                    onfocus="this.style.borderColor='#00ffcc'; this.style.boxShadow='0 0 10px rgba(0,255,204,0.2)'"
+                    onblur="this.style.borderColor='#444'; this.style.boxShadow='none'">
+            </div>
+
+            <button class="filter-btn active" onclick="filterMap('all')">🌍 All</button>
+            <button class="filter-btn" onclick="filterMap('food')">🍜 Food</button>
+            <button class="filter-btn" onclick="filterMap('places')">📍 Places</button>
+            <button class="filter-btn" onclick="filterMap('music')">🎵 Music</button>
+            <button class="filter-btn" onclick="filterMap('traditions')">🎭 Traditions</button>
+        </div>
+        <button onclick="getCurrentLocation()" style="position: absolute; top: 70px; right: 20px; z-index: 1000; background: white; color: black; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            📍 Locate Me
+        </button>
+        <div id="map-container"></div>
+    </div>
+
+    <div id="upload" class="page">
+        <div class="form-box" style="width: 500px;">
+            <h2 style="margin-bottom: 20px; text-align: center;">Share a Secret</h2>
+            <form onsubmit="handleUpload(event)">
+                <select required>
+                    <option value="">Select Category...</option>
+                    <option value="food">🍜 Food</option>
+                    <option value="places">📍 Places</option>
+                    <option value="music">🎵 Music</option>
+                    <option value="traditions">🎭 Traditions</option>
+                </select>
+                <input type="text" placeholder="Title of your upload" required>
+                <textarea placeholder="Tell a story... what makes this place magical?" rows="3" required></textarea>
+                
+                <p style="margin-bottom: 5px; font-size: 14px; color: #b3b3b3;">Upload a Teaser Photo/Video:</p>
+                <input type="file" accept="image/*, video/*" style="background: rgba(255,255,255,0.1); color: white; padding: 10px; cursor: pointer;">
+                
+                <input type="text" placeholder="What skill do you want in return?" required>
+                
+                <p style="margin-bottom: 10px; font-size: 14px; color: #b3b3b3;">Click on the map to set the exact location (kept secret):</p>
+                
+                <div style="position: relative; margin-bottom: 15px;">
+                    <button type="button" onclick="locateUploader(event)" style="position: absolute; top: 10px; right: 10px; z-index: 1000; background: white; color: black; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                        📍 Locate Me
+                    </button>
+                    <div id="upload-map" style="height: 200px; width: 100%; border-radius: 8px; z-index: 1;"></div>
+                </div>
+                
+                <input type="hidden" id="upload-lat" required>
+                <input type="hidden" id="upload-lng" required>
+
+                <button type="submit" class="submit-btn">Publish to Network</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+
+    <div id="mystery-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+        <div style="background: linear-gradient(135deg, #111a24, #0a0514); border: 1px solid #00ffcc; padding: 40px; border-radius: 16px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 10px 40px rgba(0,255,204,0.2); animation: slideUp 0.4s ease-out;">
+            <h2 style="color: #00ffcc; margin-bottom: 10px; font-size: 24px;">Geospatial Fuzzing</h2>
+            <p style="color: #aaa; margin-bottom: 25px; font-size: 14px;">Interact with the toggle below to see how we protect locals.</p>
+            <div style="position: relative; width: 100%; height: 200px; background: #051410; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,255,204,0.3); margin-bottom: 20px; display: flex; align-items: center; justify-content: center;">
+                <div style="position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                <div id="demo-exact-pin" style="position: absolute; width: 14px; height: 14px; background: #ff4d4d; border-radius: 50%; box-shadow: 0 0 15px #ff4d4d; transition: all 0.4s ease;"></div>
+                <div id="demo-mystery-zone" style="position: absolute; width: 140px; height: 140px; background: rgba(0,255,204,0.15); border: 2px dashed #00ffcc; border-radius: 50%; transform: scale(0); opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+            </div>
+            <div style="display: flex; background: rgba(255,255,255,0.05); border-radius: 30px; padding: 5px; margin-bottom: 20px; position: relative;">
+                <div id="demo-toggle-bg" style="position: absolute; width: 50%; height: calc(100% - 10px); background: #00ffcc; border-radius: 25px; transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1; transform: translateX(0);"></div>
+                <button onclick="toggleUXDemo('exact')" style="flex: 1; background: transparent; border: none; padding: 10px; color: black; font-family: inherit; font-weight: bold; cursor: pointer; z-index: 2; position: relative; transition: 0.3s;">Exact Pin</button>
+                <button onclick="toggleUXDemo('zone')" style="flex: 1; background: transparent; border: none; padding: 10px; color: white; font-family: inherit; font-weight: bold; cursor: pointer; z-index: 2; position: relative; transition: 0.3s;">Mystery Zone</button>
+            </div>
+            <p id="demo-text" style="color: #ff4d4d; font-size: 14px; margin-bottom: 25px; min-height: 40px; transition: 0.3s;">
+                <strong>Vulnerable:</strong> Anyone can extract exact coordinates and swarm the local environment.
+            </p>
+            <button onclick="document.getElementById('mystery-modal').style.display='none'" style="width: 100%; background: transparent; color: white; border: 1px solid rgba(255,255,255,0.2); padding: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                Got it, close tutorial
+            </button>
+        </div>
+    </div>
+
+    <div id="barter-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+        <div style="background: linear-gradient(135deg, #111a24, #0a0514); border: 1px solid #00ffcc; padding: 40px; border-radius: 16px; max-width: 400px; width: 90%; text-align: left; box-shadow: 0 10px 40px rgba(0,255,204,0.2); animation: slideUp 0.4s ease-out;">
+            <h2 style="color: #00ffcc; margin-bottom: 5px; font-size: 24px;">🤝 Propose a Trade</h2>
+            <p style="color: #aaa; font-size: 14px; margin-bottom: 20px;">To unlock <strong id="barter-target-title" style="color: white;">this location</strong>.</p>
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <p style="margin: 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px;">The Local is asking for:</p>
+                <p id="barter-request-text" style="margin: 5px 0 0 0; font-size: 16px; font-weight: bold; color: white;">...</p>
+            </div>
+            <p style="font-size: 14px; color: #ccc; margin-bottom: 10px;">What is your specific offer?</p>
+            <textarea id="barter-offer-input" placeholder="e.g., I can teach you Python over a 2-hour Zoom call this weekend!" rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; font-family: 'Outfit', sans-serif; margin-bottom: 20px; resize: none;"></textarea>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeBarterModal()" style="flex: 1; background: transparent; color: white; border: 1px solid #555; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='transparent'">Cancel</button>
+                <button onclick="submitBarter()" style="flex: 2; background: linear-gradient(135deg, #00ffcc, #00b38f); color: black; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Send Offer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+        <div style="background: linear-gradient(135deg, #1a0f0f, #0a0514); border: 1px solid #ff4d4d; padding: 40px; border-radius: 16px; max-width: 400px; width: 90%; text-align: left; box-shadow: 0 10px 40px rgba(255,77,77,0.15); animation: slideUp 0.3s ease-out;">
+            <h2 style="color: #ff4d4d; margin-bottom: 10px; font-size: 22px; display: flex; align-items: center; gap: 8px;">
+                ⚠️ Remove Location
+            </h2>
+            <p style="color: #aaa; font-size: 14px; margin-bottom: 20px;">Why are you requesting to remove this secret from the map?</p>
+            <select id="delete-reason-select" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; font-family: 'Outfit', sans-serif; margin-bottom: 15px;">
+                <option value="">-- Select a reason --</option>
+                <option value="owner">I am the original poster and want to take it down.</option>
+                <option value="closed">This location is permanently closed or gone.</option>
+                <option value="ruined">It is getting too crowded/ruined by tourists.</option>
+                <option value="fake">This is a fake or spam location.</option>
+                <option value="mistake">I uploaded this by mistake.</option>
+            </select>
+            <textarea id="delete-reason-details" placeholder="Additional details (optional)..." rows="2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; font-family: 'Outfit', sans-serif; margin-bottom: 20px; resize: none;"></textarea>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeDeleteModal()" style="flex: 1; background: transparent; color: white; border: 1px solid #555; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='transparent'">Cancel</button>
+                <button onclick="submitDeleteRequest()" style="flex: 1.5; background: linear-gradient(135deg, #ff4d4d, #cc0000); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
